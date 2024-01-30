@@ -1,3 +1,4 @@
+import glob
 import os
 import pandas as pd
 import shutil
@@ -18,6 +19,20 @@ with tarfile.open(TAR_FILE_PATH, 'r') as tar:
             ALL_DATA_FILES.append(member.name)
 
 ALL_DATA_FILES.sort()
+
+
+def read_ticker(folder_path):
+    # check if folder contains parquet files or csv files
+    all_files = glob.glob(os.path.join(folder_path, "*.parquet"))
+    read_func = pd.read_parquet
+    if len(all_files) == 0:
+        all_files = glob.glob(os.path.join(folder_path, "*.csv.gz"))
+        read_func = pd.read_csv
+
+    # read all files in folder
+    df = pd.concat((read_func(f) for f in all_files))
+
+    return df
 
 
 def read_data_from_tar(file_name,
