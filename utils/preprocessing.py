@@ -7,6 +7,20 @@ from utils.loading import read_ticker
 
 
 def preprocess_ticker(file_name):
+    """
+    Preprocess a ticker file.
+
+    Parameters
+    ----------
+    file_name : str
+        Name of file to read.
+
+    Returns
+    -------
+    df_cleaned : pd.DataFrame
+        Dataframe containing ticker data.
+    """
+
     df = read_ticker(file_name)
 
     if df.empty:
@@ -34,11 +48,45 @@ def preprocess_ticker(file_name):
 
 
 def xltime_to_datetime(xltime):
+    """
+    Convert Excel time to datetime.
+
+    Parameters
+    ----------
+    xltime : float
+        Excel time.
+
+    Returns
+    -------
+    datetime : datetime
+        Datetime object.
+    """
     excel_epoch = datetime(1899, 12, 30)
     return excel_epoch + timedelta(days=xltime)
 
 
 def extract_ids(s, id_type):
+    """
+    Extract trader IDs from a string.
+
+    Parameters
+    ----------
+    s : str
+        String to extract IDs from. Example:
+        '[BNPP Seller ID]1234[BNPP Buyer ID]5678'
+    id_type : str
+        Type of ID to extract. Example:
+        'BNPP Seller ID'
+
+    Returns
+    -------
+    id : int
+        Trader ID.
+
+        Example:
+
+        1234 if id_type is 'BNPP Seller ID' and s is '[BNPP Seller ID]1234'
+    """
     pattern = rf"\[{id_type}\](\d+)"
     match = re.search(pattern, s)
     return int(match.group(1)) if match else None

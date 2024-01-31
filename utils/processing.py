@@ -23,6 +23,11 @@ def process_all_tickers(ticker_paths=TICKER_PATHS,
         List of paths to tickers.
     cpu_count : int
         Number of cores to use.
+
+    Returns
+    -------
+    df_buyer_stats : pd.DataFrame
+        Dataframe containing buyer stats.
     """
     cpu_count = min(cpu_count, mp.cpu_count()-1)
     with mp.Pool(cpu_count) as pool:
@@ -73,6 +78,13 @@ def buyer_seller_stats(file_name: str):
     ----------
     file_name : str
         Path to ticker.
+
+    Returns
+    -------
+    df_buyer_stats : pd.DataFrame
+        Dataframe containing buyer stats.
+    df_seller_stats : pd.DataFrame
+        Dataframe containing seller stats.
     """
     df = preprocess_ticker(file_name)   
     df_daily_volume = daily_volume(df)
@@ -104,6 +116,11 @@ def trader_stats(df_trade_stats: pd.DataFrame,
     trader_type : str
         Type of trader to calculate stats for.
         default: 'buyer'
+
+    Returns
+    -------
+    df_trader_stats : pd.DataFrame
+        Dataframe containing trader stats.
     """
 
     trader_col = f'{trader_type}_id'
@@ -143,6 +160,11 @@ def daily_volume_std(df: pd.DataFrame):
     ----------
     df : pd.DataFrame
         Dataframe containing ticker data.
+
+    Returns
+    -------
+    df_daily_vol_std : pd.DataFrame
+        Dataframe containing daily volume standard deviation.
     """
 
     df_daily_vol_std = df.groupby(df['datetime'].dt.date)\
@@ -171,6 +193,11 @@ def daily_vol(df: pd.DataFrame) -> pd.DataFrame:
     ----------
     df : pd.DataFrame
         Dataframe containing ticker data.
+
+    Returns
+    -------
+    df : pd.DataFrame
+        Dataframe containing daily volatility.
     """
 
     df = df.copy()
@@ -196,6 +223,11 @@ def daily_volume(df: pd.DataFrame) -> pd.DataFrame:
     ----------
     df : pd.DataFrame
         Dataframe containing ticker data.
+
+    Returns
+    -------
+    df : pd.DataFrame
+        Dataframe containing daily volume.
     """
 
     df = df.copy()
