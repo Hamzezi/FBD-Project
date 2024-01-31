@@ -12,13 +12,20 @@ DATA_DIR_PATH = MAIN_DIR_PATH / 'data'
 TAR_FILE_PATH = DATA_DIR_PATH / 'ES_fut_chain.tar'
 EXTRACT_PATH = DATA_DIR_PATH / 'extracts'
 
-ALL_DATA_FILES = []
-with tarfile.open(TAR_FILE_PATH, 'r') as tar:
-    for member in tar.getmembers():
-        if member.isfile():
-            ALL_DATA_FILES.append(member.name)
+CA_TRADE_PATH = os.path.join(DATA_DIR_PATH, 'trade')
 
-ALL_DATA_FILES.sort()
+TICKER_PATHS = [os.path.join(CA_TRADE_PATH, ticker)
+                for ticker in os.listdir(CA_TRADE_PATH)]
+SAVE_PATH = os.path.join(DATA_DIR_PATH, 'processed')
+BUYER_PATH = os.path.join(SAVE_PATH, 'buyer')
+SELLER_PATH = os.path.join(SAVE_PATH, 'seller')
+
+if not os.path.exists(SAVE_PATH):
+    os.makedirs(SAVE_PATH)
+if not os.path.exists(BUYER_PATH):
+    os.makedirs(BUYER_PATH)
+if not os.path.exists(SELLER_PATH):
+    os.makedirs(SELLER_PATH)
 
 
 def read_ticker(folder_path):
@@ -42,17 +49,6 @@ def read_data_from_tar(file_name,
         tar.extract(file_name, path=extract_path)
     df = pd.read_parquet(os.path.join(extract_path, file_name))
     return df
-
-
-def read_multiple(num_files: int,
-                  file_list: list = ALL_DATA_FILES,
-                  tar_path: str = TAR_FILE_PATH,
-                  extract_path: str = EXTRACT_PATH):
-    data_list = [read_data_from_tar(file_name,
-                                    tar_path=tar_path,
-                                    extract_path=extract_path)
-                 for file_name in file_list[:num_files]]
-    return pd.concat(data_list)
 
 
 def dir_empty(dir_path):
