@@ -1,22 +1,58 @@
 import logging
+import multiprocessing as mp
 import numpy as np
 import os
 import pandas as pd
 
-from utils.loading import BUYER_PATH, SELLER_PATH
+from utils.loading import TICKER_PATHS, \
+    BUYER_PATH, \
+    SELLER_PATH
 from utils.preprocessing import preprocess_ticker
 
 logging.basicConfig(level=logging.INFO)
 
 
-def process_and_save_tiker(ticker_path):
+def process_all_tickers(ticker_paths=TICKER_PATHS,
+                        cpu_count=mp.cpu_count()-1):
+    """
+    Process all tickers in parallel.
+
+    Parameters
+    ----------
+    ticker_paths : list of str
+        List of paths to tickers.
+    cpu_count : int
+        Number of cores to use.
+    """
+    cpu_count = min(cpu_count, mp.cpu_count()-1)
+    with mp.Pool(cpu_count) as pool:
+        pool.map(process_and_save_ticker, ticker_paths)
+
+
+def process_and_save_ticker(ticker_path,
+                            buyer_path=BUYER_PATH,
+                            seller_path=SELLER_PATH):
+    """
+    Process and save a ticker.
+
+    Parameters
+    ----------
+    ticker_path : str
+        Path to ticker.
+    buyer_path : str
+        Path to save buyer stats.
+        default: BUYER_PATH
+    seller_path : str
+        Path to save seller stats.
+        default: SELLER_PATH
+    """
     try:
         df_buyer, df_seller = buyer_seller_stats(ticker_path)
 
-        buyer_filename = os.path.join(BUYER_PATH,
+        buyer_filename = os.path.join(buyer_path,
                                       os.path.basename(ticker_path))\
             + '.parquet'
-        seller_filename = os.path.join(SELLER_PATH,
+        seller_filename = os.path.join(seller_path,
                                        os.path.basename(ticker_path))\
             + '.parquet'
 
@@ -31,8 +67,12 @@ def process_and_save_tiker(ticker_path):
 def buyer_seller_stats(file_name: str):
     """
     Calculate buyer and seller stats for a given ticker file
-    :param file_name: str
-    :return: pd.DataFrame, pd.DataFrame: buyer stats, seller stats P
+    and return the results as two dataframes.
+
+    Parameters
+    ----------
+    file_name : str
+        Path to ticker.
     """
     df = preprocess_ticker(file_name)   
     df_daily_volume = daily_volume(df)
@@ -53,6 +93,18 @@ def buyer_seller_stats(file_name: str):
 
 def trader_stats(df_trade_stats: pd.DataFrame,
                  trader_type: str = 'buyer') -> pd.DataFrame:
+    """
+    Calculate trader stats for a given ticker file
+    and return the results as a dataframe.
+
+    Parameters
+    ----------
+    df_trade_stats : pd.DataFrame
+        Dataframe containing ticker data.
+    trader_type : str
+        Type of trader to calculate stats for.
+        default: 'buyer'
+    """
 
     trader_col = f'{trader_type}_id'
 
@@ -72,7 +124,7 @@ def trader_stats(df_trade_stats: pd.DataFrame,
     ).reset_index()
     df_trader_stats = pd.merge(df_trader_stats, df_day_stats, on='day')
 
-    df_trader_stats['price_impact'] = (df_trader_stats['end_price'] - 
+    df_trader_stats['price_impact'] = (df_trader_stats['end_price'] -
                                        df_trader_stats['start_price']).abs()
     df_trader_stats['price_impact_pct'] = df_trader_stats['price_impact']\
         / df_trader_stats['day_std']
@@ -83,13 +135,27 @@ def trader_stats(df_trade_stats: pd.DataFrame,
 
 
 def daily_volume_std(df: pd.DataFrame):
+    """
+    Calculate daily volume standard deviation for a given ticker file
+    and return the results as a dataframe.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataframe containing ticker data.
+    """
+
     df_daily_vol_std = df.groupby(df['datetime'].dt.date)\
-     .agg({'trade-volume': 'sum',
-           'trade-price': 'std'})\
-     .reset_index()\
-     .rename(columns={'datetime': 'day',
-                      'trade-volume': 'day_volume',
-                      'trade-price': 'day_price_std'})
+        .agg({
+            'trade-volume': 'sum',
+            'trade-price': 'std'
+            })\
+        .reset_index()\
+        .rename(columns={
+            'datetime': 'day',
+            'trade-volume': 'day_volume',
+            'trade-price': 'day_price_std'
+            })
 
     df_daily_vol_std['day'] = pd.to_datetime(df_daily_vol_std['day'])
 
@@ -97,6 +163,16 @@ def daily_volume_std(df: pd.DataFrame):
 
 
 def daily_vol(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculate daily volatility for a given ticker file
+    and return the results as a dataframe.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataframe containing ticker data.
+    """
+
     df = df.copy()
     df.sort_values('datetime', inplace=True)
     df = df.groupby('day')['trade-price']\
@@ -112,6 +188,16 @@ def daily_vol(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def daily_volume(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculate daily volume for a given ticker file
+    and return the results as a dataframe.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataframe containing ticker data.
+    """
+
     df = df.copy()
     df.sort_values('datetime', inplace=True)
     df = df.groupby('day')['trade-volume']\
