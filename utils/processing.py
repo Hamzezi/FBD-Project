@@ -63,10 +63,10 @@ def process_and_save_ticker(ticker_path,
 
         df_buyer.to_parquet(buyer_filename)
         df_seller.to_parquet(seller_filename)
-        logging.info(f'Processed and saved {ticker_path}...')
+        # logging.info(f'Processed and saved {ticker_path}...')
 
-    except ValueError:
-        logging.info(f'No data for {ticker_path}...')
+    except Exception:
+        logging.error(f'Error processing {ticker_path}...')
 
 
 def buyer_seller_stats(file_name: str):
@@ -143,8 +143,7 @@ def trader_stats(df_trade_stats: pd.DataFrame,
 
     df_trader_stats['price_impact'] = (df_trader_stats['end_price'] -
                                        df_trader_stats['start_price']).abs()
-    df_trader_stats['price_impact_pct'] = df_trader_stats['price_impact']\
-        / df_trader_stats['day_std']
+    df_trader_stats['price_impact_pct'] = df_trader_stats['price_impact']
     df_trader_stats['volume_pct'] = df_trader_stats['total_volume']\
         / df_trader_stats['day_volume']
 
@@ -202,12 +201,15 @@ def daily_vol(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df.copy()
     df.sort_values('datetime', inplace=True)
+    # df = df.groupby('day')['trade-price']\
+    #     .apply(lambda x: np.log(x / x.shift(1)))\
+    #     .reset_index()\
+    #     .groupby('day')['trade-price']\
+    #        .std()\
+    #        .reset_index()
     df = df.groupby('day')['trade-price']\
-        .apply(lambda x: np.log(x / x.shift(1)))\
-        .reset_index()\
-        .groupby('day')['trade-price']\
-           .std()\
-           .reset_index()
+        .std()\
+        .reset_index()
 
     df['day'] = pd.to_datetime(df['day'])
     df.rename(columns={'trade-price': 'day_std'}, inplace=True)
