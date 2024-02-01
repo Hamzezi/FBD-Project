@@ -11,6 +11,7 @@ MAIN_DIR_PATH = UTILS_PATH.parent
 DATA_DIR_PATH = MAIN_DIR_PATH / 'data'
 TAR_FILE_PATH = DATA_DIR_PATH / 'ES_fut_chain.tar'
 EXTRACT_PATH = DATA_DIR_PATH / 'extracts'
+PLT_PATH = MAIN_DIR_PATH / 'plots'
 
 CA_TRADE_PATH = os.path.join(DATA_DIR_PATH, 'trade')
 
@@ -26,6 +27,8 @@ if not os.path.exists(BUYER_PATH):
     os.makedirs(BUYER_PATH)
 if not os.path.exists(SELLER_PATH):
     os.makedirs(SELLER_PATH)
+if not os.path.exists(PLT_PATH):
+    os.makedirs(PLT_PATH)
 
 
 def read_ticker(folder_path):
