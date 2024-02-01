@@ -40,7 +40,8 @@ def preprocess_ticker(file_name):
                      'trade-volume',
                      'seller_id',
                      'buyer_id']].copy()
-
+    # Remove trades with same seller and buyer
+    df_cleaned = df_cleaned[df_cleaned['seller_id'] != df_cleaned['buyer_id']]
     df_cleaned['day'] = df_cleaned.datetime.dt.date
     df_cleaned['day'] = pd.to_datetime(df_cleaned['day'])
 
