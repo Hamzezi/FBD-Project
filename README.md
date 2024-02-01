@@ -11,6 +11,7 @@ This repository hosts the code and analysis for the EPFL course Financial Big Da
 ├── eda.ipynb
 ├── trade_impact.ipynb
 ├── data/trade/
+├── plots
 └── utils/
     ├── __init__.py
     ├── loading.py
