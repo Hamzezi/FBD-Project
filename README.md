@@ -23,6 +23,7 @@ At the root of the project, the following files are included:
 - `eda.ipynb`: An exploratory data analysis notebook which provides initial insights into the dataset and its characteristics.
 - `trade_impact.ipynb`: The main Jupyter notebook that runs the analysis and generates the key plots illustrating the project's findings.
 - `utils/`: A directory containing utility scripts that support data loading, preprocessing, and processing.
+- `plots/`: A directory containing our main plots.
 
 Within the `utils` directory:
 
