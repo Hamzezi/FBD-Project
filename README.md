@@ -6,12 +6,13 @@ This repository hosts the code and analysis for the EPFL course Financial Big Da
 
 ```bash
 .
-├── README.md
 ├── requirements.txt
+├── README.md
+├── FBDProject_Report.pdf
 ├── eda.ipynb
 ├── trade_impact.ipynb
-├── data/trade/
-├── plots
+├── data/trade/ # Not included in this repository
+├── plots/
 └── utils/
     ├── __init__.py
     ├── loading.py
@@ -23,6 +24,7 @@ At the root of the project, the following files are included:
 
 - `eda.ipynb`: An exploratory data analysis notebook which provides initial insights into the dataset and its characteristics.
 - `trade_impact.ipynb`: The main Jupyter notebook that runs the analysis and generates the key plots illustrating the project's findings.
+- `FBDProject_Report.pdf`: The report of our findings, including the main plots and analysis.
 - `utils/`: A directory containing utility scripts that support data loading, preprocessing, and processing.
 - `plots/`: A directory containing our main plots.
 
@@ -40,7 +42,7 @@ Ensure that you have the following prerequisites installed on your system:
 
 - Python 3.x
 - Jupyter Notebook or Jupyter Lab
-- Necessary Python packages: `numpy`, `pandas`, `matplotlib`, `multiprocessing`, etc.
+- Necessary Python packages: `numpy`, `pandas`, `matplotlib`, `seaborn`, etc.
 
 ## Data Setup for Reproducibility
 
