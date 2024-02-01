@@ -7,6 +7,7 @@ This repository hosts the code and analysis for the EPFL course Financial Big Da
 ```bash
 .
 ├── README.md
+├── requirements.txt
 ├── eda.ipynb
 ├── trade_impact.ipynb
 ├── data/trade/
@@ -60,15 +61,6 @@ By following these steps, you can set up the data in a manner consistent with th
 ## Installation
 
 After setting up your data as described above, clone the repository to your local machine:
-
-```bash
-git clone https://github.com/your-username/FBD-Project.git
-cd FBD-Project
-
-
-### Installation
-
-Clone the repository to your local machine:
 
 ```bash
 git clone https://github.com/your-username/FBD-Project.git
