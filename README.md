@@ -4,6 +4,19 @@ This repository hosts the code and analysis for the EPFL course Financial Big Da
 
 ## Project Structure
 
+```bash
+.
+├── README.md
+├── eda.ipynb
+├── trade_impact.ipynb
+├── data/trade/
+└── utils/
+    ├── __init__.py
+    ├── loading.py
+    ├── preprocessing.py
+    └── processing.py
+```
+
 At the root of the project, the following files are included:
 
 - `eda.ipynb`: An exploratory data analysis notebook which provides initial insights into the dataset and its characteristics.
