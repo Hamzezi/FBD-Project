@@ -12,7 +12,7 @@ At the root of the project, the following files are included:
 
 Within the `utils` directory:
 
-- `loading.py`: Defines the main paths (`DATA_DIR`, etc.) and contains the logic for loading the dataset.
+- `loading.py`: Defines the main paths (`DATA_DIR_PATH`, etc.) and contains the logic for loading the dataset.
 - `preprocessing.py`: Contains functions and logic to prepare the raw data for analysis.
 - `processing.py`: Includes the main processing logic of the dataset and functions designed to run in a multiprocessed manner for efficiency.
 
@@ -25,6 +25,33 @@ Ensure that you have the following prerequisites installed on your system:
 - Python 3.x
 - Jupyter Notebook or Jupyter Lab
 - Necessary Python packages: `numpy`, `pandas`, `matplotlib`, `multiprocessing`, etc.
+
+## Data Setup for Reproducibility
+
+Due to the large size of the dataset used in this analysis, it is not included in this repository. To reproduce the results:
+
+1. Create a `data/` directory in the root of the project:
+
+    ```bash
+    mkdir data
+    ```
+
+2. Within the `data/` directory, place your `trade/` data folder that contains the Canadian transaction data files.
+
+3. If you need to modify the path where the data is loaded from, you can do so by editing the `DATA_DIR_PATH` variable in the `utils/loading.py` module.
+
+4. Ensure the data folder structure matches the expected format as defined in the data loading logic of `utils/loading.py`.
+
+By following these steps, you can set up the data in a manner consistent with the codebase, allowing for seamless reproduction of the analysis.
+
+## Installation
+
+After setting up your data as described above, clone the repository to your local machine:
+
+```bash
+git clone https://github.com/your-username/FBD-Project.git
+cd FBD-Project
+
 
 ### Installation
 
@@ -57,13 +84,6 @@ jupyter notebook trade_impact.ipynb
 
 To utilize the multiprocessed processing functions, ensure that your dataset is structured correctly as per `loading.py` expectations and call the processing functions within `processing.py`.
 
-## Contributing
-
-Contributions to this project are welcome. Please open an issue to discuss proposed changes or open a pull request with your updates.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
